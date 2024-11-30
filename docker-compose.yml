@@ -11,6 +11,7 @@ services:
 
   prometheus:
     image: prom/prometheus
+    user: root
     restart: unless-stopped
     ports:
       - 9090:9090
@@ -26,6 +27,19 @@ services:
       - smartctl-exporter
     networks:
       - monitoring
+
+  grafana:
+    image: grafana/grafana
+    user: root
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
 
 networks:
   monitoring:
