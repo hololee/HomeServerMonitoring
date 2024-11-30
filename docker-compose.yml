@@ -1,4 +1,14 @@
 services:
+  smartctl-exporter:
+    image: matusnovak/prometheus-smartctl:latest
+    container_name: smartctl-exporter
+    privileged: true
+    ports:
+      - "9902:9902"
+    restart: unless-stopped
+    networks:
+      - nonitoring
+
   prometheus:
     image: prom/prometheus
     restart: unless-stopped
@@ -12,3 +22,10 @@ services:
       - --storage.tsdb.path=/prometheus
       - --storage.tsdb.retention.time=7d
       - --storage.tsdb.retention.size=1GB
+    depends_on:
+      - smartctl-exporter
+    networks:
+      - nonitoring
+
+networks:
+  nonitoring:
